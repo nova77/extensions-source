@@ -26,9 +26,7 @@ class Bouletcorp : HttpSource() {
 
     override fun popularMangaRequest(page: Int): Request = GET(baseUrl, headers)
 
-    override fun popularMangaParse(response: Response): MangasPage {
-        return MangasPage(listOf(createManga()), false)
-    }
+    override fun popularMangaParse(response: Response): MangasPage = MangasPage(listOf(createManga()), false)
 
     // -- Latest (unsupported, single manga) --
 
@@ -37,8 +35,7 @@ class Bouletcorp : HttpSource() {
 
     // -- Search --
 
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request =
-        GET(baseUrl, headers)
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request = GET(baseUrl, headers)
 
     override fun searchMangaParse(response: Response): MangasPage = popularMangaParse(response)
 
@@ -70,6 +67,7 @@ class Bouletcorp : HttpSource() {
                     name = title.replace(Regex("\\s+\\d{4}-\\d{2}-\\d{2}$"), "")
                     setUrlWithoutDomain(href)
                     date_upload = date
+                    chapter_number = -1f
                 },
             )
         }
@@ -79,8 +77,7 @@ class Bouletcorp : HttpSource() {
 
     // -- Pages --
 
-    override fun pageListRequest(chapter: SChapter): Request =
-        GET("$baseUrl${chapter.url}", headers)
+    override fun pageListRequest(chapter: SChapter): Request = GET("$baseUrl${chapter.url}", headers)
 
     override fun pageListParse(response: Response): List<Page> {
         val document = response.asJsoup()
@@ -116,6 +113,7 @@ class Bouletcorp : HttpSource() {
         author = "Boulet"
         description = "Le blog BD de Boulet"
         status = SManga.ONGOING
+        thumbnail_url = "https://cdna.artstation.com/p/users/avatars/000/616/756/large/95f8699bc6b48e40fa766ee74e275721.jpg"
     }
 
     private fun extractDate(path: String): Long {
